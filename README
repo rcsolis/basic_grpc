@@ -1,0 +1,47 @@
+# Todo Sample (gRPC)
+
+**Author:Rafael Chavez Solis**
+***Email:rafaelchavezsolis@gmail.com***
+
+## Description
+
+This is a sample program to build a Todo application based on gRPC protocol to exchange data between client and server
+programs.
+
+
+### Go Packages
+
+Install go packages:
+
+```bash
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest \
+  && go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+```
+
+Modify RC file (.zshrc or .bashrc) to add to the PATH:
+
+```bash
+export PATH="$PATH:$HOME/.local/bin:$(go env GOPATH)/bin"
+```
+
+### Command to build proto
+
+```bash
+protoc --proto_path=./ \
+--go_out=./ \
+--go_opt=paths=source_relative \
+--go-grpc_out=./ \
+--go-grpc_opt=paths=source_relative,require_unimplemented_servers=false \
+./internal/proto/*.proto
+```
+
+### Import packages
+
+Run go tidy to download the packages
+
+"google.golang.org/grpc"
+"google.golang.org/grpc/codes"
+"google.golang.org/grpc/status"
+"github.com/google/uuid"
+
+

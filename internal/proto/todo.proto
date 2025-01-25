@@ -1,0 +1,35 @@
+syntax="proto3";
+
+package proto;
+
+option go_package="github.com/rcsolis/basic_grpc";
+
+
+message Todo {
+    string date = 1;
+    string name = 2;
+    string description = 3;
+    bool done = 4;
+}
+
+message TodoIdRequest{
+    string id = 1;
+}
+
+message CreateTodoRequest{
+    string name = 1;
+    string description = 2;
+}
+
+message CreateTodoResponse{
+    Todo todo = 1;
+}
+
+message Empty{}
+
+
+service TodoService{
+    rpc CreateTodo(CreateTodoRequest) returns (CreateTodoResponse);
+    rpc DeleteTodo(TodoIdRequest) returns(Empty);
+    rpc GetAllTodos(Empty) returns(stream Todo);
+}
