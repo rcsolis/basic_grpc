@@ -64,13 +64,20 @@ func (s *TodoServer) DeleteTodo(ctx context.Context, req *pb.TodoIdRequest) (*pb
 func (s *TodoServer) GetAllTodos(req *pb.Empty, stream pb.TodoService_GetAllTodosServer) error {
 	log.Println("Getting all todos")
 
-	for _, todo := range s.todos {
+	for k, todo := range s.todos {
 		if err := stream.Send(todo); err != nil {
 			log.Println("ERROR: Failed to send todo")
 			return err
 		}
+		log.Printf("Sent todo with id: %v, todo: %v", k, todo)
 	}
 	return nil
+}
+
+func newTodoServer() *TodoServer {
+	return &TodoServer{
+		todos: make(map[string]*pb.Todo),
+	}
 }
 
 // Implement main function
@@ -80,13 +87,14 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed connection on port: %v", err)
 	}
-	// Crete a grpc server
-	server := grpc.NewServer()
+	// Crete a grpc server and todo server instance
+	grpcServer := grpc.NewServer()
+	todoServer := newTodoServer()
 	// Register the TodoServer implementation
-	pb.RegisterTodoServiceServer(server, &TodoServer{todos: make(map[string]*pb.Todo)})
+	pb.RegisterTodoServiceServer(grpcServer, todoServer)
 	// Start the server
 	log.Printf("Starting server: %v", listener.Addr())
-	if err := server.Serve(listener); err != nil {
+	if err := grpcServer.Serve(listener); err != nil {
 		log.Fatalf("Failed to serve: %v", err)
 	}
 }

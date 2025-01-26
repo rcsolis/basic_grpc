@@ -24,18 +24,18 @@ dep: clean
 	go mod verify
 	go mod tidy
 
-build_sever: dep
+buildserver: dep
 	@echo "==>Building binary"
 	go build -o bin/ -v ./cmd/server/$(BINARY_NAME_SERVER).go
 
-run_server: build_server
+runserver: buildserver
 	@echo "==>Run binary"
 	./bin/$(BINARY_NAME_SERVER)
 
-build_client: dep
+buildclient: dep
 	@echo "==>Building binary for client"
 	go build -o bin/ -v ./cmd/client/$(BINARY_NAME_CLIENT).go
 
-run_client: build_client
+runclient: buildclient
 	@echo "==>Run binary for client"
 	./bin/$(BINARY_NAME_CLIENT)
